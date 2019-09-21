@@ -34,9 +34,10 @@ public class UserService {
 
 	   @GET
 	   @Path("/users/{userid}")
-	   @Produces(MediaType.APPLICATION_JSON)
-	   public User getUser(@PathParam("userid") int userid){
-	      return userDao.getUser(userid);
+	   @Produces(MediaType.TEXT_HTML)
+	   public String getUser(@PathParam("userid") int userid){
+		  
+	      return constructBody(userDao.getUser(userid));
 	   }
 
 	   @POST
@@ -75,5 +76,14 @@ public class UserService {
 	      }
 	      return FAILURE_RESULT;
 	   }
+	   
+	   private String constructBody(User user) {
+		   return "<html> <body> <table border=2 style=\"width:100%\"> <tr> <td>id</td> <td>name</td> <td>profession</td> </tr>"+ user_to_html(user) + "</table> </body></html>";
+	   }
+	   
+	   private String user_to_html(User user) {
+		   return "<tr> <td>" + user.getId() + "</td> <td>" + user.getName() + "</td> <td>" + user.getProfession()+ "</td></tr>";
+	   }
+	   
 
 }
