@@ -26,9 +26,9 @@ public class UserService {
 	   
 	@GET
 	@Path("/users")
-	@Produces(MediaType.APPLICATION_JSON)
-	public List<User> getUsers() {
-		return userDao.getAllUsers();
+	@Produces(MediaType.TEXT_HTML)
+	public String getUsers() {
+		return user_http_response(userDao.getAllUsers());
 	}
 	
 
@@ -36,8 +36,7 @@ public class UserService {
 	   @Path("/users/{userid}")
 	   @Produces(MediaType.TEXT_HTML)
 	   public String getUser(@PathParam("userid") int userid){
-		  
-	      return constructBody(userDao.getUser(userid));
+	      return user_http_response(userDao.getUser(userid));
 	   }
 
 	   @POST
@@ -77,13 +76,29 @@ public class UserService {
 	      return FAILURE_RESULT;
 	   }
 	   
-	   private String constructBody(User user) {
-		   return "<html> <body> <table border=2 style=\"width:100%\"> <tr> <td>id</td> <td>name</td> <td>profession</td> </tr>"+ user_to_html(user) + "</table> </body></html>";
+	   private String constructBody(String input) {
+		   return "<html> <body> <table border=2 style=\"width:100%\"> <tr> <td>id</td> <td>name</td> <td>profession</td> </tr>"+ input + "</table> </body></html>";
 	   }
 	   
 	   private String user_to_html(User user) {
 		   return "<tr> <td>" + user.getId() + "</td> <td>" + user.getName() + "</td> <td>" + user.getProfession()+ "</td></tr>";
 	   }
+	   
+	   private String user_http_response(List<User> users) {
+		   String acc = "";
+		   for(User user: users){
+		       acc = acc + user_to_html(user);
+		    }
+	   		return constructBody(acc);
+	   }
+	   
+	   private String user_http_response(User user) {
+	   		return constructBody(user_to_html(user));
+	   }
+	   
+	   
+	   
+	   
 	   
 
 }
